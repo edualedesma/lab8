@@ -1,69 +1,70 @@
 class Racional
 	
 	attr_accessor :numerador, :denominador
+    
+    def minimo(x,y)
+        y == 0 ? x: minimo(y, x%y)
+    end
 
-	def initialize(num=4, den=3)
-		@numerador = num
-		@denominador = den
-		self.reduce
+	def initialize(num, den)
+        raise TypeError, "El denominador no puede ser cero" if den.eql? 0
+        
+		min = minimo(num, den)
+        @numerador = num / min
+		@denominador = den / min
+		#self.reduce
 	end
 	
-	def num
-		@numerador
-	end
-	
-	def denom
-		@denominador
-	end
-	
-	def reduce
-		a = @numerador
-		b = @denominador
-		x = 0
-		if a < b
-			x = a
-		else
-			x = b
-		end
-		
-		reducida = false
-		while (x > 1 && !reducida) do
-			if (a % x) == 0 && (b % x == 0)
-				a = a/x
-				b = b/x
-				reducida = true
-			else
-				x = x-1
-			end
-		end
-		@numerador = a
-		@denominador = b
-		self.to_s
-	end
+	#def reduce
+	#	a = @numerador
+	#	b = @denominador
+	#	x = 0
+	#	if a < b
+	#		x = a
+	#	else
+	#		x = b
+	#	end
+	#
+	#	reducida = false
+	#	while (x > 1 && !reducida) do
+	#		if (a % x) == 0 && (b % x == 0)
+	#			a = a/x
+	#			b = b/x
+	#			reducida = true
+	#		else
+	#			x = x-1
+	#		end
+	#	end
+	#	@numerador = a
+	#	@denominador = b
+	#	self.to_s
+	#end
 	
 	def to_s
-		"(#@numerador/#@denominador)"
+		"#@numerador/#@denominador"
     end
 	
 	def mostrar_flotante
-		(num.to_f/denom.to_f)
+		@numerador.to_f/@denominador.to_f
 	end
 	
 	def ==(o)
-		return @numerador == o.num && @denominador == o.denom if o.instance_of? Racional
+		return @numerador == o.numerador && @denominador == o.denominador if o.instance_of? Racional
 		false
 	end
 	
 	def abs
-		a = @numerador
-		b = @denominador
-		if @numerador < 0
-			a = -1 * @numerador
-		end
-		if @denominador < 0
-			b = -1 * @denominador
-		end
-		Racional.new(a,b)
+		#a = @numerador
+		#b = @denominador
+		#if @numerador < 0
+		#	a = -1 * @numerador
+		#end
+		#if @denominador < 0
+		#	b = -1 * @denominador
+		#end
+		#Racional.new(a,b)
+        Racional.new(@numerador.abs, @denominador)
+        
 	end
 	
 	def reciprocal
@@ -71,47 +72,57 @@ class Racional
 	end
 	
 	def -@
-		Racional.new(-@numerador,-@denominador)
+		Racional.new(-@numerador,@denominador)
 	end
 	
 	def +(o)
-		denomTotal = @denominador * o.denom
-		(Racional.new(((denomTotal / @denominador) * @numerador) + 
-					 ((denomTotal / o.denom) * o.num), denomTotal)).reduce
+        denomTotal = @denominador * o.denominador
+        Racional.new(((denomTotal / @denominador) * @numerador) +
+                     ((denomTotal / o.denominador) * o.numerador), denomTotal)
+        
 	end
 	
 	def -(o)
-		denomTotal = @denominador * o.denom
-		(Racional.new(((denomTotal / @denominador) * @numerador) - 
-					 ((denomTotal / o.denom) * o.num), denomTotal)).reduce
+        #denomTotal = @denominador * o.denom
+        #(Racional.new(((denomTotal / @denominador) * @numerador) -
+        #((denomTotal / o.denom) * o.num), denomTotal)).reduce
+        self + (-o)
 	end
 	
 	def *(o)
-		(Racional.new(@numerador * o.num, @denominador * o.denom)).reduce
+		Racional.new(@numerador * o.numerador, @denominador * o.denominador)
 	end
 	
 	def /(o)
-		(Racional.new(@numerador * o.denom, @denominador * o.num)).reduce
+        #self * o.reciprocal    # Otra forma de dividir
+        Racional.new(@numerador * o.denominador, @denominador * o.numerador)
 	end
 	
 	def %(o)
-		(Racional.new(@numerador % @denominador, o.num % o.denom)).reduce
+        l = @numerador * o.denominador
+        r = @denominador * o.numerador
+        n = l/r
+        Racional.new( l - n * r, @denominador * o.denominador)
 	end
-	
+
 	def <(o)
-		(@numerador/@denominador) < (o.num/o.denom)
+        #(@numerador/@denominador) < (o.numerador/o.denominador)
+        (@numerador * o.denominador) < (@denominador * o.numerador)
 	end
 	
 	def >(o)
-		(@numerador/@denominador) > (o.num/o.denom)
+        #(@numerador/@denominador) > (o.numerador/o.denominador)
+        (@numerador * o.denominador) > (@denominador * o.numerador)
 	end
 	
 	def <=(o)
-		(@numerador/@denominador) <= (o.num/o.denom)
+        #(@numerador/@denominador) <= (o.numerador/o.denominador)
+        (@numerador * o.denominador) <= (@denominador * o.numerador)
 	end
 	
 	def >=(o)
-		(@numerador/@denominador) >= (o.num/o.denom)
+        #(@numerador/@denominador) >= (o.numerador/o.denominador)
+        (@numerador * o.denominador) >= (@denominador * o.numerador)
 	end
 end
 
@@ -130,7 +141,6 @@ if __FILE__ == $0
 	puts ra.reciprocal
 	puts ra.abs
 	puts ra4
-	puts ra4.reduce
 	puts ra5
 	puts ra2 + ra6
 	puts ra2 + ra3

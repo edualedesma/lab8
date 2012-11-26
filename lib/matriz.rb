@@ -8,6 +8,10 @@ class Matriz
 		@tam = m.size-1
 		@matr = m
 	end
+    
+    def [] (index)
+        @data[index]
+    end
 	
 	def to_s
 		resultado = ""
@@ -19,22 +23,24 @@ class Matriz
 	end
 	
 	def +(o)
+		vector = Array.new(@tam+1) { Array.new(@tam+1,0) }
+		result = Matriz.new(vector)
 		for i in 0..@tam do
 			for j in 0..@tam do
-				o.matr[i][j] = @matr[i][j] + o.matr[i][j]
+				result.matr[i][j] = @matr[i][j] + o.matr[i][j]
 			end
 		end
-		o.to_s
+		return result
 	end
 	
 	def *(o) # Suponemos que son matrices cuadradas
-        suma = 0;
-		result = Matriz.new(Array.new(@tam+1,Array.new(o.tam+1)))
+		vector = Array.new(@tam+1) { Array.new(@tam+1,0) } # Array.new(2) { Array.new(2,0) }
+		result = Matriz.new(vector)
         for i in 0..@tam  
             for j in 0..@tam
-                suma = 0;  
-                for k in 0..@tam  
-                    suma += @matr[i][k] * o.matr[k][j]
+                suma = self.matr[i][0] * o.matr[0][j];
+                for k in 1..@tam
+					suma = suma + self.matr[i][k] * o.matr[k][j]
                 end 
                 result.matr[i][j] = suma
             end  
@@ -46,11 +52,13 @@ end
 if __FILE__ == $0
 	m1 = Matriz.new([[1,2], [3,4]])
 	m2 = Matriz.new([[5,6], [7,8]])
-	#m1 + m2
 	
-	#mr1 = Matriz.new([[Racional.new(4,3),Racional.new(4,3)],[Racional.new(4,3),Racional.new(4,3)]])
-	#mr2 = Matriz.new([[Racional.new(1,3),Racional.new(1,3)],[Racional.new(1,3),Racional.new(1,3)]])
-	#mr1 + mr2
+	mr1 = Matriz.new([[Racional.new(1,3),Racional.new(2,3)],[Racional.new(3,3),Racional.new(4,3)]])
+	mr2 = Matriz.new([[Racional.new(5,3),Racional.new(6,3)],[Racional.new(7,3),Racional.new(8,3)]])
 	
-	puts m1 * m2
+	puts m1 + m2	# Suma de matrices enteras
+	puts mr1 + mr2	# Suma de matrices racionales
+	
+	puts m1 * m2	# Multiplicación de matrices enteras
+	puts mr1 * mr2	# Multiplicación de matrices racionales
 end
