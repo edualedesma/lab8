@@ -12,6 +12,17 @@ class Matriz
     def [] (index)
         @data[index]
     end
+    
+    def == (o)
+        for i in 0..(self.tam) do
+            for j in 0..(self.tam) do
+                if self.matr[i][j] != o.matr[i][j]
+                    return false
+                end
+            end
+        end
+        return true
+    end
 	
 	def to_s
 		resultado = ""
