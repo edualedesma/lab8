@@ -44,8 +44,8 @@ class Racional
 		"#@numerador/#@denominador"
     end
 	
-	def mostrar_flotante
-		@numerador.to_f/@denominador.to_f
+	def to_f
+		@numerador/@denominador
 	end
 	
 	def ==(o)
